@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "A JavaScript polyfill for the CSS Typed Object Model (Level 1)",
   "main": "css-typed-om-polyfill.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "css-typed-om-polyfill.js",
     "README.md",
@@ -29,8 +32,6 @@
     "url": "https://github.com/oy3o/css-typed-om-polyfill/issues"
   },
   "homepage": "https://github.com/oy3o/css-typed-om-polyfill#readme",
-  "devDependencies": {
-  },
-  "dependencies": {
-  }
+  "devDependencies": {},
+  "dependencies": {}
 }
