@@ -1,0 +1,36 @@
+{
+  "name": "css-typed-om-polyfill",
+  "version": "0.1.0",
+  "description": "A JavaScript polyfill for the CSS Typed Object Model (Level 1)",
+  "main": "css-typed-om-polyfill.js",
+  "files": [
+    "css-typed-om-polyfill.js",
+    "README.md",
+    "README.zh.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oy3o/css-typed-om-polyfill.git"
+  },
+  "keywords": [
+    "css",
+    "typed-om",
+    "typed om",
+    "polyfill",
+    "houdini",
+    "cssom",
+    "stylepropertymap",
+    "attributeStyleMap"
+  ],
+  "author": "oy3o <npm@oy3o.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/oy3o/css-typed-om-polyfill/issues"
+  },
+  "homepage": "https://github.com/oy3o/css-typed-om-polyfill#readme",
+  "devDependencies": {
+  },
+  "dependencies": {
+  }
+}
