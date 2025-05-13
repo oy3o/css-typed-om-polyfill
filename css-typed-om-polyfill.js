@@ -961,7 +961,7 @@
         toString() { return this.is2D ? `translate(${this.x}, ${this.y})` : `translate3d(${this.x}, ${this.y}, ${this.z})` }
     }
     class CSSRotate extends CSSTransformComponent {
-        constructor(a, y = null, z = null, angle = null) {
+        constructor(angleOrX, y = null, z = null, angle = null) {
             super()
             this.is2D = (y === null && z === null && angle === null)
 
