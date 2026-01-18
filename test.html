@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Moonlight Abyss | CSS Typed OM Deep Scan</title>
+    <style>
+        :root {
+            --bg: #050505;
+            --panel: #0f0f0f;
+            --border: #222;
+            --text: #a0a0a0;
+            --accent: #bd93f9;
+            --pass: #50fa7b;
+            --fail: #ff5555;
+            --deviant: #8be9fd;
+            --warn: #ffb86c;
+            --font-code: 'Menlo', 'Monaco', 'Consolas', monospace;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-code);
+            font-size: 11px;
+            margin: 0;
+            padding: 20px;
+            overflow-y: scroll;
+            line-height: 1.4;
+        }
+
+        /* Layout */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            margin: 0;
+            color: var(--accent);
+            font-size: 16px;
+            letter-spacing: 1px;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border: 1px solid #444;
+            border-radius: 4px;
+            color: #888;
+            text-transform: uppercase;
+        }
+
+        .badge.active {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Stats Grid */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            background: var(--panel);
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border);
+        }
+
+        .stat strong {
+            display: block;
+            font-size: 18px;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .stat span {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #555;
+        }
+
+        /* Test Groups */
+        .group {
+            margin-top: 40px;
+        }
+
+        .group h2 {
+            font-size: 12px;
+            color: #fff;
+            border-left: 3px solid var(--accent);
+            padding-left: 10px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Test Row */
+        .row {
+            display: grid;
+            grid-template-columns: 30px 240px 1fr 70px 60px;
+            gap: 10px;
+            padding: 6px 10px;
+            border-bottom: 1px solid #111;
+            align-items: start;
+            transition: background 0.1s;
+        }
+
+        .row:hover {
+            background: #0a0a0a;
+        }
+
+        .desc {
+            font-weight: bold;
+            color: #888;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .cmd {
+            font-size: 9px;
+            color: #444;
+            word-break: break-all;
+        }
+
+        /* Value Output */
+        .val {
+            color: #f8f8f2;
+            font-size: 10px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 4px;
+            border-radius: 2px;
+            font-family: var(--font-code);
+        }
+
+        .val.err {
+            color: var(--fail);
+        }
+
+        .val.dom-log {
+            color: var(--deviant);
+            font-style: italic;
+        }
+
+        /* Status Colors */
+        .status {
+            text-align: right;
+            font-weight: bold;
+        }
+
+        .PASS {
+            color: var(--pass);
+        }
+
+        .FAIL {
+            color: var(--fail);
+        }
+
+        .DEVIANT {
+            color: var(--deviant);
+        }
+
+        .time {
+            text-align: right;
+            color: var(--warn);
+            font-weight: bold;
+            opacity: 0.7;
+        }
+
+        /* Live DOM Lab */
+        #live-lab {
+            margin-top: 40px;
+            padding: 20px;
+            border: 1px dashed var(--border);
+            position: relative;
+            min-height: 100px;
+        }
+
+        #lab-target {
+            background: #111;
+            transition: all 0.3s ease;
+        }
+
+        /* Controls */
+        .controls {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(5, 5, 5, 0.95);
+            border-top: 1px solid var(--border);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+
+        button {
+            background: var(--accent);
+            color: #000;
+            border: none;
+            padding: 8px 16px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        button:hover {
+            background: #d6bcfa;
+        }
+
+        button.secondary {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        button.secondary:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+    </style>
+    <script src="cssom.js"></script>
+</head>
+
+<body>
+
+    <header>
+        <div>
+            <h1>// MOONLIGHT ABYSS</h1>
+            <div style="font-size:9px; color:#555; margin-top:4px;">CSS Typed OM Architect & Red Team Suite</div>
+        </div>
+        <div id="env-badge" class="badge">Detecting Env...</div>
+    </header>
+
+    <div class="stats">
+        <div class="stat"><strong id="s-total">0</strong><span>Total Tests</span></div>
+        <div class="stat"><strong id="s-pass" style="color:var(--pass)">0</strong><span>Passing</span></div>
+        <div class="stat"><strong id="s-fail" style="color:var(--fail)">0</strong><span>Failing</span></div>
+        <div class="stat"><strong id="s-deviant" style="color:var(--deviant)">0</strong><span>Deviant</span></div>
+        <div class="stat"><strong id="s-perf" style="color:var(--warn)">--</strong><span>Mean Latency</span></div>
+    </div>
+
+    <div id="console"></div>
+
+    <!-- Live DOM Interaction Section -->
+    <div class="group">
+        <h2>Live DOM Reflection <span style="font-size:9px; opacity:0.5; text-transform:none">Manipulating
+                #lab-target</span></h2>
+        <div id="live-lab">
+            <div id="lab-target">Target Element</div>
+            <pre id="lab-log" class="val" style="margin-top:20px; color:#666;">Waiting for execution...</pre>
+        </div>
+    </div>
+
+    <div style="height:80px"></div>
+
+    <div class="controls">
+        <button class="secondary" onclick="Abyss.clear()">Clear</button>
+        <button onclick="Abyss.runDomTest()">Run DOM Test</button>
+        <button onclick="Abyss.run(1)">Quick Scan</button>
+        <button onclick="Abyss.run(100000)">Stress Test (100k)</button>
+    </div>
+    <script></script>
+    <script>
+        // --- 1. The Core Utility (Moonlight Engine) ---
+        const Abyss = {
+            state: { total: 0, pass: 0, fail: 0, deviant: 0 },
+            config: { batch: 1 },
+
+            // Advanced Recursive Serializer
+            fmt(obj, depth = 0) {
+                try {
+                    if (depth > 6) return "..."; // Safety Brake
+                    if (obj === undefined) return "undefined";
+                    if (obj === null) return "null";
+
+                    // Primitives
+                    if (typeof obj !== 'object') return String(obj);
+
+                    // 1. CSSUnitValue: "10px"
+                    if (obj instanceof CSSUnitValue) {
+                        return `${parseFloat(obj.value.toFixed(4))}${obj.unit}`;
+                    }
+
+                    // 2. CSSUnparsedValue: Unparsed["val"]
+                    if (obj instanceof CSSUnparsedValue) {
+                        const inner = Array.from(obj).map(s => typeof s === 'string' ? `"${s}"` : this.fmt(s, depth + 1)).join(', ');
+                        return `Unparsed[${inner}]`;
+                    }
+
+                    // 3. CSSMathSum: Sum(A + B)
+                    if (obj instanceof CSSMathSum) {
+                        // Handle missing values (Polyfill bugs)
+                        if (!obj.values) return `MathSum{Invalid: No Values}`;
+                        const inner = Array.from(obj.values).map(v => this.fmt(v, depth + 1)).join(' + ');
+                        return `Sum(${inner})`;
+                    }
+
+                    // 4. CSSMathProduct: Product(A * B)
+                    if (obj instanceof CSSMathProduct) {
+                        const inner = Array.from(obj.values).map(v => this.fmt(v, depth + 1)).join(' * ');
+                        return `Product(${inner})`;
+                    }
+
+                    // 5. CSSMathClamp: Clamp(Min < Val < Max)
+                    if (obj instanceof CSSMathClamp) {
+                        // Explicitly check properties
+                        const min = this.fmt(obj.lower, depth + 1);
+                        const val = this.fmt(obj.value, depth + 1);
+                        const max = this.fmt(obj.upper, depth + 1);
+                        return `Clamp(${min} < ${val} < ${max})`;
+                    }
+
+                    // 6. CSSMathInvert / Negate
+                    if (obj instanceof CSSMathInvert) return `Invert(${this.fmt(obj.value, depth + 1)})`;
+                    if (obj instanceof CSSMathNegate) return `Neg(${this.fmt(obj.value, depth + 1)})`;
+
+                    // 7. Transforms (Translate, Rotate, Scale, Skew)
+                    if (obj instanceof CSSTranslate) return `Translate(${this.fmt(obj.x)}, ${this.fmt(obj.y)}, ${this.fmt(obj.z)})`;
+                    if (obj instanceof CSSScale) return `Scale(${this.fmt(obj.x)}, ${this.fmt(obj.y)}, ${this.fmt(obj.z)})`;
+                    if (obj instanceof CSSRotate) return `Rotate(${this.fmt(obj.x)}, ${this.fmt(obj.y)}, ${this.fmt(obj.z)}, ${this.fmt(obj.angle)})`;
+                    if (obj instanceof CSSSkew) return `Skew(${this.fmt(obj.ax)}, ${this.fmt(obj.ay)})`;
+                    if (obj instanceof CSSPerspective) return `Perspective(${this.fmt(obj.length)})`;
+
+                    // 8. CSSTransformValue (The List)
+                    if (obj instanceof CSSTransformValue || (Symbol.iterator in obj && obj.length !== undefined)) {
+                        const items = Array.from(obj).map(i => this.fmt(i, depth + 1));
+                        const type = obj.constructor.name || 'List';
+                        return `${type} [ ${items.join(', ')} ]`;
+                    }
+
+                    // 9. CSSVariableReferenceValue
+                    if (obj instanceof CSSVariableReferenceValue) {
+                        return `CSSVariableReferenceValue(${this.fmt(obj.variable)}, ${this.fmt(obj.fallback)})`
+                    }
+
+                    // 10. Generic Fallback
+                    // If it's a generic object (like CSSType result), print keys
+                    const keys = Object.keys(obj);
+                    if (keys.length > 0 && keys.length < 5) {
+                        const parts = keys.map(k => `${k}:${this.fmt(obj[k], depth + 1)}`);
+                        return `${obj.constructor.name}{ ${parts.join(', ')} }`;
+                    }
+                    return obj.constructor.name || String(obj);
+                } catch (e) {
+                    return `[Complex Object]:${obj.constructor.name}` + JSON.stringify(obj);
+                }
+            },
+
+            touch(obj, d = 0) {
+                if (!obj || d > 5 || typeof obj !== 'object') return;
+                // Force getter execution
+                const _ = obj.length;
+                if (obj.value) void obj.value;
+                if (obj.x) this.touch(obj.x, d + 1);
+                if (Symbol.iterator in obj) for (let i of obj) this.touch(i, d + 1);
+            },
+
+
+            // --- 2. Benchmark Runner ---
+            async run(batchSize) {
+                this.config.batch = batchSize;
+                this.resetStats();
+
+                // Define P globally so 'new Function' scope can see it
+                window.P = (p, v) => {
+                    if (!window.CSSStyleValue) throw new Error("CSS Typed OM Not Supported");
+                    return CSSStyleValue.parse(p, v);
+                };
+
+                // Env Check
+                const isNative = window.CSSStyleValue && window.CSSStyleValue.toString().includes('native code');
+                const b = document.getElementById('env-badge');
+                if (window.CSSStyleValue) {
+                    b.textContent = isNative ? "NATIVE ENGINE" : "POLYFILL DETECTED";
+                    b.className = isNative ? "badge active" : "badge";
+                } else {
+                    b.textContent = "NOT SUPPORTED";
+                    b.className = "badge";
+                    b.style.borderColor = "#ff5555";
+                    b.style.color = "#ff5555";
+                }
+
+                // --- SUITE A: Primitives ---
+                await this.suite("A. Primitives & Syntax", [
+                    { d: "Calc(0) No Unit", c: "P('width', 'calc(0 + 10px)')", err: true },
+                    { d: "Garbage Fn", c: "P('width', 'garbage(20px)')", err: true },
+                    { d: "Pixel Unit", c: "P('width', '100px')", check: v => v instanceof CSSUnitValue && v.value === 100 },
+                    { d: "Percent", c: "P('width', '50%')", check: v => v.unit === 'percent' },
+                    { d: "Keyword", c: "P('display', 'block')", check: v => v instanceof CSSKeywordValue },
+                    { d: "Bad Unit", c: "P('width', '100pxpx')", err: true },
+                    { d: "Empty", c: "P('color', '')", err: true }
+                ]);
+
+                // --- SUITE B: Math ---
+                await this.suite("B. CSS Math Complexity", [
+                    { d: "Calc Sum", c: "P('width', 'calc(10px + 20px)')", check: v => v instanceof CSSUnitValue },
+                    { d: "Mixed Units", c: "P('width', 'calc(100% - 20px)')", check: v => v instanceof CSSMathSum },
+                    { d: "Clamp", c: "P('width', 'clamp(10px, 50%, 100px)')", check: v => v instanceof CSSMathClamp },
+                    { d: "Variable Ref", c: "P('width', 'var(--x)')", check: v => v instanceof CSSUnparsedValue || v instanceof CSSVariableReferenceValue },
+                    { d: "Ref Calc", c: "P('width', 'min(var(--w, 10px), 50vw)')", check: v => v instanceof CSSUnparsedValue || v instanceof CSSMathMin },
+                    { d: "Product (*)", c: "P('width', 'calc(10px * 2)')", check: v => v.value === 20 && v instanceof CSSUnitValue },
+                    { d: "Clamp Logic", c: "P('width', 'clamp(10px, 50%, 100px)')", check: v => v instanceof CSSMathClamp },
+                    { d: "Nested Math", c: "P('width', 'calc((100% - 20px) / 2)')", check: v => v instanceof CSSMathSum }
+                ]);
+
+                // --- SUITE C: Transforms ---
+                await this.suite("C. Transforms", [
+                    { d: "Translate", c: "P('transform', 'translate(10px, 50%)')", check: v => v[0] instanceof CSSTranslate },
+                    { d: "Complex Chain", c: "P('transform', 'scale(2) rotate(45deg) skew(10deg)')", check: v => v.length === 3 },
+                    { d: "3D Vector", c: "P('transform', 'translate3d(10px, 20px, 30px)')", check: v => v[0].z.value === 30 }
+                ]);
+
+                // D. Limits
+                await this.suite("D. Limits & Precision", [
+                    { d: "High Precision", c: "P('width', '0.123456789px')", check: v => Math.abs(v.value - 0.123456789) < 1e-9 },
+                    { d: "Scientific", c: "P('width', '1e-5px')", check: v => v.value === 0.00001 }
+                ]);
+            },
+
+            // --- 3. DOM Integration Logic ---
+            runDomTest() {
+                const logArea = document.getElementById('lab-log');
+                const target = document.getElementById('lab-target');
+                let logs = [];
+                const log = (...args) => logs.push(args.join(' '));
+
+                try {
+                    log(">>> Initializing DOM Element...");
+                    target.removeAttribute('style');
+
+                    // Safety Check
+                    if (!target.attributeStyleMap) {
+                        throw new Error("Browser does not support 'attributeStyleMap'.");
+                    }
+
+                    // 1. Typed OM Write
+                    log(">>> Setting Values via Typed OM...");
+                    const map = target.attributeStyleMap;
+
+                    if (window.CSS && CSS.percent) {
+                        map.set('height', CSS.percent(50));
+                        map.set('padding', '20px');
+                        map.set('border-style', 'dashed');
+                        map.set('border-width', '2px');
+                        map.set('border-color', '#bd93f9');
+                        log(`[Set] height: ${this.fmt(map.get('height'))}`);
+                    } else {
+                        log("[Warn] window.CSS helpers (CSS.px, etc) missing.");
+                    }
+
+                    log(`[Result] cssText: ${target.style.cssText}`);
+
+                    // 2. Read Back
+                    const wVal = map.get('height');
+                    log(`[Read] Height Type: ${wVal ? wVal.constructor.name : 'undefined'}`);
+
+                    // 3. Delete
+                    map.delete('padding');
+                    log(`[Delete] Padding removed? ${!map.has('padding')}`);
+
+                } catch (e) {
+                    log(`[CRITICAL ERROR] ${e.message}`);
+                    console.error(e);
+                } finally {
+                    logArea.textContent = logs.join('\n');
+                }
+            },
+
+            // --- 4. Internal Helpers ---
+            async suite(name, cases) {
+                const root = document.getElementById('console');
+                const group = document.createElement('div');
+                group.className = 'group';
+                group.innerHTML = `<h2>${name}</h2>`;
+                root.appendChild(group);
+
+                let totalTime = 0;
+                let countTime = 0;
+
+                for (let i = 0; i < cases.length; i++) {
+                    const t = cases[i];
+                    const fn = new Function("return " + t.c);
+
+                    let status = "PENDING";
+                    let resStr = "";
+                    let timeNs = 0;
+                    let err = null;
+                    let result = null;
+
+                    // Execution
+                    const t0 = performance.now();
+                    try {
+                        for (let k = 0; k < this.config.batch; k++) {
+                            result = fn();
+                            this.touch(result); // Optional: enable for heavier GC stress
+                        }
+                    } catch (e) { err = e; }
+                    const t1 = performance.now();
+
+                    // Metrics
+                    timeNs = ((t1 - t0) * 1e6) / this.config.batch;
+                    if (!err) { totalTime += timeNs; countTime++; }
+                    this.state.total++;
+
+                    // Validation Logic
+                    if (t.err) {
+                        if (err) { status = "PASS"; resStr = `Caught: ${err.message}`; }
+                        else { status = "DEVIANT"; resStr = `Expected Error, got: ${this.fmt(result)}`; }
+                    } else {
+                        if (err) { status = "FAIL"; resStr = `${err.name}: ${err.message}`; }
+                        else {
+                            try {
+                                if (t.check && !t.check(result)) {
+                                    status = "FAIL";
+                                    resStr = `Check Failed. Got: ${this.fmt(result)}`;
+                                } else {
+                                    status = "PASS";
+                                    resStr = this.fmt(result);
+                                }
+                            } catch (chkErr) {
+                                status = "FAIL";
+                                resStr = `Check Logic Err: ${chkErr.message}`;
+                            }
+                        }
+                    }
+
+                    // Stats
+                    if (status === 'PASS') this.state.pass++;
+                    if (status === 'FAIL') this.state.fail++;
+                    if (status === 'DEVIANT') this.state.deviant++;
+
+                    // Render
+                    const row = document.createElement('div');
+                    row.className = 'row';
+                    row.innerHTML = `
+                        <span style="color:#555">#${i + 1}</span>
+                        <div><span class="desc">${t.d}</span><span class="cmd">${t.c}</span></div>
+                        <div class="val ${status === 'FAIL' ? 'err' : ''}">${resStr}</div>
+                        <div class="time">${timeNs.toFixed(0)}ns</div>
+                        <div class="status ${status}">${status}</div>
+                    `;
+                    root.appendChild(row);
+
+                    if (i % 5 === 0) await new Promise(r => setTimeout(r, 0));
+                }
+
+                if (countTime > 0) {
+                    const mean = totalTime / countTime;
+                    document.getElementById('s-perf').innerText = mean.toFixed(0) + " ns";
+                }
+                this.updateStats();
+            },
+
+            resetStats() {
+                this.state = { total: 0, pass: 0, fail: 0, deviant: 0 };
+                document.getElementById('console').innerHTML = '';
+                this.updateStats();
+            },
+
+            updateStats() {
+                document.getElementById('s-total').textContent = this.state.total;
+                document.getElementById('s-pass').textContent = this.state.pass;
+                document.getElementById('s-fail').textContent = this.state.fail;
+                document.getElementById('s-deviant').textContent = this.state.deviant;
+            },
+
+            clear() {
+                this.resetStats();
+                document.getElementById('lab-log').textContent = "Ready.";
+                document.getElementById('lab-target').removeAttribute('style');
+            }
+        };
+
+        // Initialize
+        console.log("%c Abyss Loaded. ", "background: #222; color: #bd93f9; font-size:12px; padding:4px;");
+        // Auto start
+        Abyss.run(1);
+        Abyss.runDomTest()
+    </script>
+</body>
+
+</html>

@@ -1,13 +1,13 @@
 {
   "name": "css-typed-om-polyfill",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "description": "A JavaScript polyfill for the CSS Typed Object Model (Level 1)",
-  "main": "css-typed-om-polyfill.js",
+  "main": "cssom.js",
   "publishConfig": {
     "access": "public"
   },
   "files": [
-    "css-typed-om-polyfill.js",
+    "cssom.js",
     "README.md",
     "README.zh.md",
     "LICENSE"
